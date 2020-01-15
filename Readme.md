@@ -41,7 +41,7 @@ app.listen(3000);
 
  - [Kick-Off-Koa](https://github.com/koajs/kick-off-koa) - An intro to Koa via a set of self-guided workshops.
  - [Workshop](https://github.com/koajs/workshop) - A workshop to learn the basics of Koa, Express' spiritual successor.
- - [Introduction Screencast](http://knowthen.com/episode-3-koajs-quickstart-guide/) - An introduction to installing and getting started with Koa
+ - [Introduction Screencast](https://knowthen.com/episode-3-koajs-quickstart-guide/) - An introduction to installing and getting started with Koa
 
 
 ## Middleware
@@ -136,7 +136,7 @@ app.use(async (ctx, next) => {
 ```
 
 The `Context` object also provides shortcuts for methods on its `request` and `response`.  In the prior
-examples,  `ctx.type` can be used instead of `ctx.request.type` and `ctx.accepts` can be used
+examples,  `ctx.type` can be used instead of `ctx.response.type` and `ctx.accepts` can be used
 instead of `ctx.request.accepts`.
 
 For more information on `Request`, `Response` and `Context`, see the [Request API Reference](docs/api/request.md),

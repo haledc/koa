@@ -17,7 +17,7 @@
 
 ### response.socket
 
-  Request socket.
+  Response socket. Points to net.Socket instance as `request.socket`.
 
 ### response.status
 
@@ -126,7 +126,7 @@ If `response.status` has not been set, Koa will automatically set the status to 
 
 Koa doesn't guard against everything that could be put as a response body -- a function doesn't serialise meaningfully, returning a boolean may make sense based on your application, and while an error works, it may not work as intended as some properties of an error are not enumerable.  We recommend adding middleware in your app that asserts body types per app.  A sample middleware might be:
 
-```
+```js
 app.use(async (ctx, next) => {
   await next()
 
@@ -175,6 +175,15 @@ app.use(async ctx => {
 
 ```js
 const etag = ctx.response.get('ETag');
+```
+
+### response.has(field)
+
+  Returns `true` if the header identified by name is currently set in the outgoing headers.
+  The header name matching is case-insensitive.
+
+```js
+const rateLimited = ctx.response.has('X-RateLimit-Limit');
 ```
 
 ### response.set(field, value)

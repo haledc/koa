@@ -72,7 +72,7 @@ ctx.state.user = await User.find(id);
 
  - `signed` the cookie requested should be signed
 
-Koa uses the [cookies](https://github.com/jed/cookies) module where options are simply passed.
+Koa uses the [cookies](https://github.com/pillarjs/cookies) module where options are simply passed.
 
 ### ctx.cookies.set(name, value, [options])
 
@@ -81,13 +81,13 @@ Koa uses the [cookies](https://github.com/jed/cookies) module where options are 
  - `maxAge` a number representing the milliseconds from Date.now() for expiry
  - `signed` sign the cookie value
  - `expires` a `Date` for cookie expiration
- - `path` cookie path, `/'` by default
+ - `path` cookie path, `'/'` by default
  - `domain` cookie domain
  - `secure` secure cookie
  - `httpOnly` server-accessible cookie, __true__ by default
  - `overwrite` a boolean indicating whether to overwrite previously set cookies of the same name (__false__ by default). If this is true, all cookies set during the same request with the same name (regardless of path or domain) are filtered out of the Set-Cookie header when setting this cookie.
 
-Koa uses the [cookies](https://github.com/jed/cookies) module where options are simply passed.
+Koa uses the [cookies](https://github.com/pillarjs/cookies) module where options are simply passed.
 
 ### ctx.throw([status], [msg], [properties])
 
