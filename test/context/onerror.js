@@ -1,4 +1,3 @@
-
 'use strict';
 
 const assert = require('assert');
@@ -100,6 +99,48 @@ describe('ctx.onerror(err)', () => {
       .expect(200, () => {});
   });
 
+  it('should set status specified in the error using statusCode', () => {
+    const app = new Koa();
+
+    app.use((ctx, next) => {
+      ctx.body = 'something else';
+      const err = new Error('Not found');
+      err.statusCode = 404;
+      throw err;
+    });
+
+    const server = app.listen();
+
+    return request(server)
+      .get('/')
+      .expect(404)
+      .expect('Content-Type', 'text/plain; charset=utf-8')
+      .expect('Not Found');
+  });
+
+  describe('when invalid err.statusCode', () => {
+    describe('not number', () => {
+      it('should respond 500', () => {
+        const app = new Koa();
+
+        app.use((ctx, next) => {
+          ctx.body = 'something else';
+          const err = new Error('some error');
+          err.statusCode = 'notnumber';
+          throw err;
+        });
+
+        const server = app.listen();
+
+        return request(server)
+          .get('/')
+          .expect(500)
+          .expect('Content-Type', 'text/plain; charset=utf-8')
+          .expect('Internal Server Error');
+      });
+    });
+  });
+
   describe('when invalid err.status', () => {
     describe('not number', () => {
       it('should respond 500', () => {
@@ -163,6 +204,40 @@ describe('ctx.onerror(err)', () => {
     });
   });
 
+  describe('when error from another scope thrown', () => {
+    it('should handle it like a normal error', async() => {
+      const ExternError = require('vm').runInNewContext('Error');
+
+      const app = new Koa();
+      const error = Object.assign(new ExternError('boom'), {
+        status: 418,
+        expose: true
+      });
+      app.use((ctx, next) => {
+        throw error;
+      });
+
+      const server = app.listen();
+
+      const gotRightErrorPromise = new Promise((resolve, reject) => {
+        app.on('error', receivedError => {
+          try {
+            assert.strictEqual(receivedError, error);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
+
+      await request(server)
+        .get('/')
+        .expect(418);
+
+      await gotRightErrorPromise;
+    });
+  });
+
   describe('when non-error thrown', () => {
     it('should response non-error thrown message', () => {
       const app = new Koa();
@@ -206,7 +281,7 @@ describe('ctx.onerror(err)', () => {
       });
 
       app.use(async ctx => {
-        throw {key: 'value'}; // eslint-disable-line no-throw-literal
+        throw { key: 'value' }; // eslint-disable-line no-throw-literal
       });
 
       request(app.callback())
